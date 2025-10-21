@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Bakgrund</title>
     <style>
-        /* Se till att videon täcker hela sidan */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: black;
         }
 
         video {
@@ -20,15 +23,51 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* täcker hela sidan utan att förvrängas */
-            z-index: -1; /* bakom allt innehåll */
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        #startButton {
+            z-index: 1;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
-    <video autoplay loop playsinline>
+    <video id="bgVideo" loop playsinline>
         <source src="video.webm" type="video/webm">
         Din webbläsare stödjer inte videon.
     </video>
+
+    <button id="startButton">Starta video med ljud</button>
+
+    <script>
+        const video = document.getElementById('bgVideo');
+        const button = document.getElementById('startButton');
+
+        // Försök spela automatiskt (kan blockeras)
+        video.play().catch(() => {
+            // Om autoplay blockeras visas knappen
+            button.style.display = 'block';
+        });
+
+        // Klicka för att starta videon med ljud
+        button.addEventListener('click', () => {
+            video.muted = false;
+            video.play();
+            button.style.display = 'none';
+        });
+
+        // Om autoplay lyckas, dölj knappen
+        video.onplay = () => {
+            button.style.display = 'none';
+        };
+    </script>
 </body>
 </html>
